@@ -1,0 +1,137 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+.container{
+    max-width: 1140px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+header{
+    background: #3a8cc0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: #e8491d 3px solid;
+
+}
+.root{
+    display: flex;
+}
+main{
+    border-bottom: #e8491d 3px solid;
+    width: 80%;
+}
+
+.title-bar{
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+}
+aside{
+    width: 20%;
+    padding: 25px 0px;
+}
+
+aside ul{
+    padding: 0;
+    margin: 0;
+    list-style: outside;
+}
+aside ul li button{
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: outside;
+    background-color: white;
+    border: none;
+    display: flex;
+    cursor: pointer;
+    padding: 5px;
+}
+aside ul li button:hover{
+    background-color: rgb(135, 164, 189);
+}
+
+.lessons{
+    display: flex;
+    flex-wrap: wrap;
+}
+.lessons__item{
+    width: 210px;
+    background-color: #7691aa;
+    padding: 20px 20px;
+    margin: 15px;
+    border-radius: 10px;
+}
+.lessons__item figure{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.lessons__item figure img{
+    width: 100px;
+    height: 100px;
+}
+.cart{
+    display: flex;
+   flex-direction: row;
+}
+.cart__item{
+    display: flex;
+    align-items: center;
+    background-color: #66b0c7;
+    margin: 5px 0;
+}
+.cart__item div{
+    padding: 5px;
+    width: 100%;
+}
+.cart__item img{
+    width: 40px;
+    height: 40px;
+}
+
+.cart__item button{
+    background-color: #2d598b21;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+}
+.cart__item button:hover{
+    background-color: #ff000034;
+}
+
+form{
+    background-color: #f1f1f1;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px lightgrey;
+    display: flex;
+    margin: 20px 0;
+    flex-direction: column;
+}
+form input{
+    display: block;
+    width: 100%;
+    padding: 5px;
+}
+form input[type="submit"] {
+    text-align:center;
+    margin: 10px 0;
+}
+form div{
+    padding: 10px 0;
+}

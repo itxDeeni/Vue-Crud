@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="design.css">
+    <script src="products.js"></script>
+
+
+</head>
+
+<body>
+    <div id="app">
+            <header>
+                <h1 v-text="sitename"></h1>
+                <button v-if="cart.length > 0" v-on:click='showCheckout'> {{cart.length}} <span
+                        class="fas fa-cart-plus"></span>Cart
+                    </button>
+            </header>
+        
+        
+        <div class="container">
+            <div class="root">
+            <!-- sorting -->
+                <aside>
+                    <h4>Sort by</h4>
+                    <ul>
+                        <li><button v-on:click="type = 'subject'">Subject</button></li>
+                        <li><button v-on:click="type = 'price'">Price</button></li>
+                        <li><button v-on:click="type = 'Location'">Location</button></li>
+                    </ul>
+                </aside>
+                <main>
+                    <div v-if='!showProduct'>
+                        <div class="title-bar">
+                            <h1>Lessons</h1>
+                            <select v-model="sort" id="sortby">
+                                <option value="ascending">Ascending</option>
+
+                                <option value="descending">Descending</option>
+                            </select>
+                        </div>
+                       
+                        <!-- lessons-->
+                        <div class="lessons">
+                            <div v-for="(lessons, index) in sortedLessons" :key="`lesson--${index}`"
+                                class="lessons__item">
+                                <h2><p>Subject: {{ lessons.subject }}</p></h2>
+                                <figure>
+                                    <img v-bind:src="lessons.image" width="250" height="200">
+                                </figure>
+                                <p>Location: {{ lessons.location }}</p>
+                                <p>Price: {{ lessons.price }}</p>
+                                <p>Spaces: {{lessons.availableInventory}}</p>
+                                <button v-on:click='addToCart(lessons)' :disabled="!lessons.availableInventory">Add to
+                                    cart</button>
+                                <span v-if="lessons.availableInventory">{{'Left '+ lessons.availableInventory}}</span>
+                                <span v-else>This lesson is fully booked!</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else>
+                        <div class="container">
+                            <!-- calculation-->
+                            <div class="title-bar">
+                                <button v-on:click="showCheckout"><span class="fas fa-arrow-left"></span> Previous page</button>
+                                <h4>Total Amount: {{total}}</h4>
+                            </div>
+                            <!-- cart-->
+                            <h4>Your cart</h4>
+                            <div class="cart">
+                                <div class="cart__item">
+                                    <div style="width: auto;">Image</div>
+                                    <div>Subject</div>
+                                    <div>Location</div>
+                                    <div>Price</div>
+
+                                </div>
+                                <hr style="width: 100%">
+                                <div class="cart__item" v-for="(item, index) in cart" :key="`cart--${index}`">
+                                    <div style="width: auto;"><img :src="item.image" alt=""></div>
+                                    <div>{{item.subject}}</div>
+                                    <div>{{item.location}}</div>
+                                    <div>{{item.price}}</div>
+                                    <div style="width: auto;"><button v-on:click="removeFromCart(item)"
+                                                class="fa fa-minus-square" aria-hidden="true"></button></div>
+                                </div>
+                                <div v-if="!cart.length > 0" class="cart__item"
+                                    style="background-color: transparent; padding: 20px;">
+                                    <div style="text-align: center; color: grey; font-size: 20px; font-weight: bold;">
+                                    List Empty</div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div>
+                                <h3>Student Details</h3>
+                                
+                                <form>
+                                    <div>
+                                        <label for="name">Your Name</label>
+                                        <input v-model="user.name" type="text" required>
+                                    </div>
+                                    <div>
+                                        <label for="name">Phone Number</label>
+                                        <input v-model="user.number" type="tel" required>
+                                    </div>
+                                    <input type="submit" value="Checkout">
+                                </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        const webstore = new Vue({
+            el: '#app',
+            data: {
+                sitename: 'After School Lessons',
+                lessons: [],
+                cart: [],
+                showProduct: false,
+                order: {
+                    firstName: '',
+                    lastName: '',
+                },
+                sort: 'ascending',
+                type: '',
+                user: {
+                    name: '',
+                    number: ''
+                }
+            },
+            methods: {
+                addToCart(lesson) {
+                    this.lessons.find(item => item.id == lesson.id).availableInventory -= 1;
+                    this.cart.push({ cartId: (this.cart.length + 1), ...lesson });
+                    // console.log('adding to cart', lesson.id)
+                },
+                removeFromCart(lesson) {
+                    if (confirm('You are about to delete this!')) {
+                        this.cart = [...this.cart].filter(item => item.cartId != lesson.cartId)
+                    }
+                },
+                showCheckout() {
+                    this.showProduct = !this.showProduct;
+                },
+                submit() {
+                    if (this.phonenumber(this.user.number)) {
+                        alert('Your Lesson has been booked.')
+                        // console.log(this.user);
+                    }
+                },
+                phonenumber(number) {
+                    if ((number.match(phoneno))) {
+                        return true;
+                    }  
+                }
+            },
+            computed: {
+                total() {
+                    return this.cart.length > 0 ? this.cart.map(item => item.price).reduce((acc, cur) => acc + cur) : 0;
+                },
+                //Everything here is for sorting lessons
+                sortedLessons() {
+                    switch (this.type) {
+                        case 'subject':
+                            return this.lessons.sort((a, b) => {
+                                switch (this.sort) {
+                                    case 'ascending':
+                                        return a.subject.toUpperCase() > b.subject.toUpperCase() ? 1 : -1;
+                                    default:
+                                        return a.subject.toUpperCase() < b.subject.toUpperCase() ? 1 : -1;
+                                }
+                            })
+                        case 'location':
+                            return this.lessons.sort((a, b) => {
+                                switch (this.sort) {
+                                    case 'ascending':
+                                        return a.location.toUpperCase() > b.location.toUpperCase() ? 1 : -1;
+                                    default:
+                                        return a.location.toUpperCase() < b.location.toUpperCase() ? 1 : -1;
+                                }
+                            })
+                        case 'price':
+                            return this.lessons.sort((a, b) => {
+                                return this.sort == 'ascending' ? a.price - b.price : b.price - a.price;
+                            })
+                        case 'space':
+                            return this.lessons.sort((a, b) => {
+                                return this.sort == 'ascending' ? a.availableInventory - b.availableInventory : b.availableInventory - a.availableInventory;
+                            })
+                        default:
+                            return this.lessons.sort((a, b) => {
+                                return this.sort == 'ascending' ? a.id - b.id : b.id - a.id;
+                            })
+                    }
+                }
+            },
+            created() {
+                this.lessons = lessons
+            }
+        });
+    </script>
+</body>
+
+</html>
